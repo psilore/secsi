@@ -80,7 +80,7 @@ get_alerts() {
     fi
 
     URL="/repos/$OWNER/$REPO/dependabot/alerts"
-    ACTIVE_ALERTS=$(gh api "$URL" --jq "[.[] | {repository: \"$REPO\", number: .number, state: .state, security_advisory: .security_advisory.summary, severity: .security_advisory.severity, cve: (.security_advisory.identifiers[] | select(.type == \"CVE\") | .value)}]")
+    ACTIVE_ALERTS=$(gh api "$URL" --jq "[.[] | select(.state == \"open\") | {repository: \"$REPO\", number: .number, state: .state, security_advisory: .security_advisory.summary, severity: .security_advisory.severity, cve: (.security_advisory.identifiers[] | select(.type == \"CVE\") | .value)}]")
 
     
     if [ -n "$ACTIVE_ALERTS" ]; then
